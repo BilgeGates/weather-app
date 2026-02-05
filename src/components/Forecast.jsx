@@ -1,3 +1,5 @@
+import { Droplets, Wind, Calendar, Clock } from "lucide-react";
+
 function Forecast({ forecast, unit }) {
   // Filter 5-day forecast (1 data point per day)
   const dailyForecast = forecast.list
@@ -22,6 +24,7 @@ function Forecast({ forecast, unit }) {
   return (
     <div className="glass-effect rounded-3xl p-8 animate-slide-up">
       <h3 className="font-display text-3xl font-bold text-white mb-6 flex items-center gap-3">
+        <Calendar className="h-7 w-7 text-purple-400" />
         5-Day Forecast
       </h3>
 
@@ -74,9 +77,11 @@ function Forecast({ forecast, unit }) {
             <div className="mt-3 pt-3 border-t border-white/10">
               <div className="flex items-center justify-between text-xs">
                 <div className="flex items-center gap-1">
+                  <Droplets className="h-3 w-3 text-blue-400" />
                   <span className="text-gray-400">{day.main.humidity}%</span>
                 </div>
                 <div className="flex items-center gap-1">
+                  <Wind className="h-3 w-3 text-green-400" />
                   <span className="text-gray-400">
                     {day.wind.speed} {unit === "metric" ? "m/s" : "mph"}
                   </span>
@@ -90,6 +95,7 @@ function Forecast({ forecast, unit }) {
       {/* Hourly Forecast for today */}
       <div className="mt-8 pt-8 border-t border-white/20">
         <h4 className="font-display text-2xl font-bold text-white mb-4 flex items-center gap-2">
+          <Clock className="h-6 w-6 text-purple-400" />
           Today (Hourly)
         </h4>
 
