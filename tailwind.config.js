@@ -4,8 +4,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        display: ["Orbitron", "sans-serif"],
-        body: ["Outfit", "sans-serif"],
+        display: ["'Poppins'", "system-ui", "sans-serif"],
+        body: ["'Inter'", "system-ui", "sans-serif"],
       },
       animation: {
         float: "float 6s ease-in-out infinite",
