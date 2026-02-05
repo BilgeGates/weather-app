@@ -134,13 +134,57 @@ function App() {
   // Load default city on mount
   useEffect(() => {
     if (API_KEY) {
-      fetchWeather("Baku");
+      // Try to get last searched city from localStorage
+      const lastCity = localStorage.getItem("lastCity");
+      if (lastCity) {
+        fetchWeather(lastCity);
+      } else {
+        fetchWeather("Baku");
+      }
     }
   }, []);
+
+  // Save city to localStorage when weather is fetched
+  useEffect(() => {
+    if (city) {
+      localStorage.setItem("lastCity", city);
+    }
+  }, [city]);
 
   const toggleUnit = () => {
     const newUnit = unit === "metric" ? "imperial" : "metric";
     setUnit(newUnit);
+    if (city) {
+      // Refetch with new unit
+      setLoading(true);
+      setError("");
+
+      const params = new URLSearchParams({
+        q: city,
+        appid: API_KEY,
+        units: newUnit,
+        lang: "en",
+      });
+
+      Promise.all([
+        fetch(`${BASE_URL}/weather?${params.toString()}`),
+        fetch(`${BASE_URL}/forecast?${params.toString()}`),
+      ])
+        .then(([weatherRes, forecastRes]) => {
+          if (!weatherRes.ok) throw new Error("Failed to fetch weather");
+          return Promise.all([weatherRes.json(), forecastRes.json()]);
+        })
+        .then(([weatherData, forecastData]) => {
+          setWeather(weatherData);
+          setForecast(forecastData);
+        })
+        .catch((err) => setError(err.message))
+        .finally(() => setLoading(false));
+    }
+  };
+
+  // Refresh current weather
+  const refreshWeather = () => {
     if (city) {
       fetchWeather(city);
     }
@@ -159,6 +203,7 @@ function App() {
             onLocationClick={getCurrentLocation}
             unit={unit}
             onToggleUnit={toggleUnit}
+            onRefresh={refreshWeather}
           />
         </div>
 
